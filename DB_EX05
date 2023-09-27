@@ -1,0 +1,318 @@
+SELECT REPLACE (E.JOB,'MANAGER','관리자')JOB ,E.*  FROM EMP E;
+
+--REPRACE 
+
+--INSTR
+ --INDEXOF
+ --문자의 위치(1부터 시작) 문자없으면 0반환 
+
+SELECT INSTR(ENAME,'S'),ENAME FROM EMP;
+--문자의 위치를 알수 있다. 
+
+SELECT * FROM EMP WHERE ENAME LIKE '%S%';
+
+SELECT * FROM EMP WHERE INSTR(ENAME,'S')>0;
+
+SELECT '10' ,LPAD('10',5,'0') ORDERNO1,RPAD('10',5,'0') ORDERNO2 FROM DUAL;
+--왼쪽으로 부족한 문자열 채우기 
+SELECT CONCAT (CONCAT('ABC','DEF'),'GHI') FROM DUAL;
+
+-- 세개 이상 
+SELECT 'ABC' || 'DEF'||'GHI' FROM DUAL;
+
+SELECT JOB || ':' || ENAME "부서명:직원명",E.* FROM EMP E;
+
+LENGTH,SUBSTR,RPAD;
+
+TRIM, LTRIM,RTRIM
+-공백 제거 
+-TRIM :양쪽 공백 제거 
+
+SELECT '[' || TRIM ('   ABC     ')|| ']' FROM DUAL;
+
+
+SELECT '[' || LTRIM ('   ABC     ')|| ']' FROM DUAL;
+
+
+SELECT '[' || RTRIM ('   ABC     ')|| ']' FROM DUAL;
+
+
+SELECT '[' || TRIM (LEADING ' 'FROM'  ABC     ')|| ']' FROM DUAL;
+
+SELECT '[' || TRIM (TRAILING ' 'FROM'    ABC     ')|| ']' FROM DUAL;
+
+SELECT '[' || TRIM (BOTH ' 'FROM'  ABC     ')|| ']' FROM DUAL;
+
+
+SELECT '[' || RTRIM ('  ________ABC___________','_')|| ']' FROM DUAL;
+
+SELECT ROUND(1234.5678,0)FROM DUAL; 
+--반올림함 
+SELECT ROUND(1234.5678,1)FROM DUAL; 
+
+SELECT ROUND(1234.5678,-1)FROM DUAL; 
+--음수 소수점기준으로 오른쪽
+
+SELECT ROUND(1234.5678,-2)FROM DUAL; 
+
+SELECT TRUNC(1234.5678) FROM DUAL;
+
+SELECT TRUNC(1234.5678,1) FROM DUAL;
+
+SELECT TRUNC(1234.5678,2) FROM DUAL;
+
+SELECT CEIL(3.14) FROM DUAL;
+--올림 
+SELECT CEIL(-3.14) FROM DUAL;
+
+SELECT FLOOR(3.14)FROM DUAL;
+
+SELECT FLOOR(-3.14)FROM DUAL;
+--음수  
+
+SELECT MOD(10,3) FROM DUAL;
+
+
+
+SELECT SYSDATE AS NOW, 
+	SYSDATE-1 AS YESTERDAY, 
+	SYSDATE+1 AS TOMORROW
+FROM DUAL;
+
+SELECT SYSDATE +1 TOMORROW FROM DUAL;
+
+SELECT SYSDATE +7 NEXT_WEEK FROM DUAL;
+
+SELECT SYSDATE -1  FROM DUAL;
+
+SELECT  * FROM EMP;
+
+SELECT EMPNO,ENAME,JOB,HIREDATE,ROUND(SYSDATE -HIREDATE) 경과일수
+FROM EMP;
+--날짜와 날짜의 가산은 할수 없다 .
+
+SELECT SYSDATE, ADD_MONTHS(SYSDATE, 3) AS "3개월_후" FROM DUAL;
+
+SELECT SYSDATE, ADD_MONTHS(SYSDATE, -3) AS "3개월_전" FROM DUAL;
+
+
+SELECT EMPNO,ENAME,JOB,HIREDATE,ROUND (MONTHS_BETWEEN(SYSDATE,HIREDATE)) 
+"경과 월수" FROM EMP; 
+
+SELECT NEXT_DAY(SYSDATE,'토')FROM DUAL; 
+
+
+SELECT LAST_DAY(SYSDATE)FROM DUAL; 
+
+SELECT TO_CHAR(SYSDATE,'YYYY.MM.DD HH24:MI')FROM DUAL;
+
+
+
+-- TO_DATE : 날짜나 숫자 -> 형식 화된 날짜, 숫자 문자
+-- TO_DATE : 형식화 된 문자 --> 날짜 
+-- TO_NUMBER : 형식화 된 숫자 -> 숫자 
+SELECT TO_DATE('23-09-01','YY-MM-DD')FROM DUAL;
+
+SELECT TO_DATE('80-09-01','RR-MM-DD')FROM DUAL;
+
+
+
+SELECT TO_CHAR('10000000','999,999,999')|| '원'FROM DUAL;
+
+SELECT '10000'+'2000' FROM DUAL;
+
+SELECT TO_NUMBER('10,000','999,999')+'2000' FROM DUAL;
+
+
+--형식화 함수 3가지 TO_CHAR TO_DATE() TO_NUMBER 
+--숫자 -> 형식화된 숫자 문자열 
+--연도 YYYY,YY RRRR,RR 2개짜리 YY :현재 연도 앞자리 예)80->2080
+-- RR : 현재 날짜에서 가장 가까운 연도 80-> 1980 
+--월 :MM
+--일 :DD
+
+--시 HH,HH24,HH12
+--분 :MI
+--초 :SS 
+
+--TO_CHAR(날짜,'형식화 문자열- YY.MM.DD')
+--숫자 -> 형식화된 숫자 문자열 
+-- 		999,999
+-- TO_CHAR(숫자,'숫자 패턴')
+
+-- TO_DATE()
+-- 형식화된 날짜 문자열 -> 날짜 
+-- TO_DATE (문자열 ,'날짜 형식 ')
+
+--TO_NUMBER
+
+--NVL
+
+SELECT EMPNO,ENAME,SAL, SAL*12 +NVL(COMM,0) AS "연봉"FROM EMP;
+
+SELECT EMPNO,ENAME,SAL, SAL*12 +NVL(COMM,0) AS "연봉",
+NVL2(COMM,'0','X') AS "수당 유무"FROM EMP;
+
+
+
+SELECT EMPNO,ENAME,SAL,
+	DECODE(JOB,
+		'MANAGER',SAL*1.1,
+		'SALESMAN',SAL*1.05,
+		'ANALYST',SAL,
+		SAL*1.03
+		) "인상 급여" FROM EMP;
+		
+SELECT EMPNO,ENAME,JOB,SAL,
+CASE JOB 
+WHEN 'MANAGER'THEN SAL*1.1
+WHEN 'SALESMAN'THEN SAL*1.05
+WHEN 'ANALYST' THEN SAL
+ELSE SAL*1.03
+END "인상급여"
+FROM EMP;
+
+
+SELECT EMPNO,ENAME,JOB ,SAL ,
+	CASE
+		WHEN SAL<1500 THEN 'LOW SAL'
+		WHEN SAL<2500 THEN 'MID SAL'
+		ELSE 'HIGH_SAL'
+	END "급여등급"
+FROM EMP;
+
+SELECT COUNT(COMM) FROM EMP; 
+--널도 카운트함 
+
+SELECT *FROM EMP;
+
+SELECT COUNT(*) FROM EMP;
+--전채 회원 수 
+
+
+
+
+select  min(SAL) as 박봉, max(SAL) as 최대연봉
+from EMP WHERE DEPTNO =30 OR DEPTNO =10;
+
+
+select  min(SAL) as 박봉, max(SAL) as 최대연봉
+from EMP WHERE DEPTNO IN(10,30);
+
+
+select  min(SAL) as 박봉, max(SAL) as 최대연봉
+from EMP WHERE DEPTNO NOT IN(10,30);
+
+
+select DEPTNO, min(SAL) as 박봉, max(SAL) as 최대연봉, 
+ROUND(AVG(SAL),2) 평균,
+SUM(SAL) 합꼐
+from EMP WHERE DEPTNO NOT IN(10,30);
+
+
+
+select   DEPTNO || '번 부서' ,JOB,min(SAL) as 박봉, max(SAL) as 최대연봉, 
+ROUND(AVG(SAL),2) 평균,
+SUM(SAL) 합꼐
+from EMP GROUP BY DEPTNO,JOB ORDER BY DEPTNO ;
+-- 같은 열이 나와야 합칠수있다 .
+
+
+
+select  min(SAL) as 박봉, max(SAL) as 최대연봉 ,
+ROUND(AVG(SAL),2) 평균,SUM(SAL) 합계 
+from EMP GROUP BY DEPTNO ORDER BY DEPTNO ;
+
+
+
+SELECT DEPTNO || '번 부서' ,JOB,min(SAL) as 박봉, max(SAL) as 최대연봉, 
+ROUND(AVG(SAL),2) 평균,
+SUM(SAL) 합꼐
+from EMP GROUP BY DEPTNO,JOB ORDER BY DEPTNO ;
+--그룹함수는 HAVING 절 써야한다 ...... 집계함수 조건 범위 하려면 
+
+SELECT DEPTNO || '번 부서' ,JOB,min(SAL) as 박봉, max(SAL) as 최대연봉, 
+ROUND(AVG(SAL),2) 평균,
+SUM(SAL) 합꼐
+from EMP GROUP BY DEPTNO,JOB 
+HAVING AVG(SAL)<=1000 ORDER BY DEPTNO ;
+
+
+
+SELECT DEPTNO || '번 부서' ,JOB,min(SAL) as 박봉, max(SAL) as 최대연봉, 
+ROUND(AVG(SAL),2) 평균,
+SUM(SAL) 합꼐
+from EMP GROUP BY ROLLUP(DEPTNO,JOB) ;
+
+
+SELECT DEPTNO || '번 부서' ,JOB,min(SAL) as 박봉, max(SAL) as 최대연봉, 
+ROUND(AVG(SAL),2) 평균,
+SUM(SAL) 합꼐
+from EMP GROUP BY CUBE(DEPTNO,JOB) ;
+-- 직책별 통계도 따로 나온다 
+
+
+SELECT *FROM EMP;
+
+SELECT *FROM DEPT;
+
+
+SELECT E.DEPTNO, ENAME, D.DEPTNO, DNAME, LOC 
+	FROM EMP E, DEPT D 
+WHERE E.DEPTNO = D.DEPTNO;
+
+
+SELECT * FROM EMP,DEPT;
+--카티션 프로덕트 다케르트 표기법 
+SELECT * FROM EMP,DEPT WHERE EMP.DEPTNO=DEPT.DEPTNO ;
+-- 등가 조인 
+
+SELECT E.* ,D.DNAME FROM EMP E,DEPT D WHERE E.DEPTNO=D.DEPTNO ;
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
